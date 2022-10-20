@@ -44,7 +44,11 @@ export class Cloudflare {
         return res;
     };
 
-    public logs = async (start: Date, end: Date, fields: string[]) => {
+    public logs = async (
+        start: Date,
+        end: Date,
+        fields: string[]
+    ): Promise<CloudflareLogs> => {
         const baseEndpoint = `zones/${process.env.CF_ZONE_ID}/logs/received`;
 
         const oneHour = 60 * 60;
@@ -65,21 +69,28 @@ export class Cloudflare {
                 res = res.concat(this.parseLogData(data));
             }
 
-            return res;
+            return {
+                start: range[0],
+                end: range[range.length - 1],
+                data: res,
+            };
         } else {
+            end = range.length > 1 ? range[1] : end;
+            start = range[0];
             const logsEndpoint = this.addSearchParams(baseEndpoint, {
-                start: Math.floor(range[0].valueOf() / 1000),
-                end: Math.floor(
-                    (range.length > 1 ? range[0].valueOf() : end.valueOf()) /
-                        1000
-                ),
+                start: Math.floor(start.valueOf() / 1000),
+                end: Math.floor(end.valueOf() / 1000),
                 fields: fields.join(","),
                 timestamps: "unixnano",
             });
 
             const data: string = await this.get(logsEndpoint);
 
-            return this.parseLogData(data);
+            return {
+                start,
+                end,
+                data: this.parseLogData(data),
+            };
         }
     };
 }

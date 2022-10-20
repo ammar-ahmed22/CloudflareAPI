@@ -4,10 +4,10 @@ import { Cloudflare } from "./cloudflare";
 import { Datetime } from "../helpers/datetime";
 
 const cf = new Cloudflare({
-    baseURL: "https://api.cloudflare.com/client/v4",
+    baseURL: `${process.env.CF_API_BASE_URL}`,
     headers: {
         "Content-Type": "application/json",
-        "X-Auth-Email": "ammar@fragbuy.ca",
+        "X-Auth-Email": `${process.env.CF_AUTH_EMAIL}`,
         "X-Auth-Key": `${process.env.CF_API_KEY}`,
     },
 });
@@ -25,7 +25,7 @@ test("testing cloudflare api logs function", async () => {
     const start = Datetime.createDate(end, "past", { days: 1 });
 
     const startTime = performance.now();
-    const data = await cf.logs(start, end, [
+    const logs = await cf.logs(start, end, [
         "ClientIP",
         "RayID",
         "EdgeStartTimestamp",
@@ -35,6 +35,6 @@ test("testing cloudflare api logs function", async () => {
     // about 20s
     console.log({
         elapsedTime: `${Math.floor((endTime - startTime) / 1000)}s`,
-        size: data.length,
+        size: logs.data.length,
     });
 });
