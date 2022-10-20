@@ -1,0 +1,8 @@
+@types
+node_modules
+dist
+.gitignore
+*.json
+yarn.lock
+*.env
+*.csv
