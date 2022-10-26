@@ -1,5 +1,9 @@
 import "./string.ts";
+import { assertEquals } from "https://deno.land/std@0.160.0/testing/asserts.ts"
 
-const test = "Ammar";
+Deno.test("String", async (t) => {
 
-console.log(test.filter((char) => char !== "a"));
+  await t.step("string.filter", () => {
+    assertEquals("Ammar".filter((char) => char !== "a"), "Ammr");
+  })
+})

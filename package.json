@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "denon start",
     "start": "deno run --allow-env --allow-read --allow-write --allow-net ./src/index.ts",
-    "test": "jest",
+    "test": "deno test --allow-all",
     "format": "prettier --write ./src",
     "prebuild": "rm -rf ./execute",
     "build": "deno compile -c ./tsconfig.json --allow-env --allow-read --allow-write --allow-net --output=execute ./src/index.ts",

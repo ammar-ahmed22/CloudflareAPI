@@ -1,102 +1,105 @@
 import * as path from "https://deno.land/std@0.160.0/path/mod.ts";
-import { readCSV, CSV } from "./csv.ts";
+import { CSV } from "./csv.ts";
 import { task } from "./cli.ts";
+import { assertEquals, assertNotEquals } from "https://deno.land/std@0.160.0/testing/asserts.ts"
+import "../../@types/index.d.ts";
 
 const __dirname = path.dirname(path.fromFileUrl(import.meta.url));
 
 const data = new CSV();
-await task("Read and parse data file", async () => {
-    await data.fromFile(path.resolve(__dirname, "../test-data/10212022.csv"), {
-        omitColumns: ["tags"],
-        castValue: (val, cn) => {
-            if (cn === "competitor_price") {
-                return parseFloat(val);
+Deno.test("CSV", async (t) => {
+    const data = new CSV();
+    
+    await t.step("Read .csv file, omit column and cast values", async () => {
+        await data.fromFile(
+            path.resolve(__dirname, "../test-data/test-data.csv"),
+            {
+                omitColumns: ["tags"],
+                castValue: (val: string, colName: string) : csvValue => {
+                    if (colName === "competitor_price"){
+                        return parseFloat(val);
+                    }
+
+                    if (colName === "updated_at_est_time"){
+                        return new Date(val)
+                    }
+
+                    return val;
+                },
+            }
+        )
+
+        assertEquals(data.headers?.includes("tags"), false)
+    })
+
+    await t.step("Checking if size of CSV is correct", () => assertEquals(data.size(), 4992))
+
+    await t.step("Writing updated csv to file", async () => {
+       await data.toCSV(path.resolve(__dirname, "../test-data/test.csv"))
+       
+       try {
+        const f = await Deno.open(path.resolve(__dirname, "../test-data/test.csv"))
+        f.close()
+       } catch (error) {
+        if (error instanceof Deno.errors.NotFound){
+            throw "file does not exist"
+        }
+       }
+
+       
+    })
+
+    await t.step("Getting row from value", () => {
+        const row = data.getRowFromValue("ourCustomSKU", "ETATLIBSOMEONEM-100B");
+        assertNotEquals(row, null);
+    })
+
+    await t.step("Adding column", () => {
+        const withTax = data.addColumn("withTax", (row: Row) => {
+            let taxPrice : number = 0;
+            if (typeof row.competitor_price === "number"){
+                taxPrice = parseFloat((row.competitor_price * 1.13).toFixed(2));
             }
 
-            if (cn === "updated_at_est_time") {
-                return new Date(val);
+            row.withTax = taxPrice;
+            return row;
+        })
+
+        assertEquals(withTax.headers?.includes("withTax"), true);
+        assertEquals(withTax.size(), 4992)
+    })
+
+    await t.step("Filtering CSV", () => {
+        const over100 = data.filter((row: Row) => {
+
+            if (typeof row.competitor_price === "number"){
+                if (row.competitor_price < 100){
+                    return false;
+                }
             }
 
-            return val;
-        },
-    });
-});
+            return true
+        })
 
-const products = new CSV();
+        assertEquals(over100.size(), 1449);
+    })
 
-await task("Read and parse products data", async () => {
-    await products.fromFile(
-        path.resolve(__dirname, "../test-data/product-2022-10-24.csv"),
-        {
-            castValue: (value, cn) => {
-                if (cn === "Price") {
-                    return parseFloat(value);
+    await t.step("Filtering CSV inplace", () => {
+        data.filter((row: Row) => {
+
+            if (typeof row.competitor_price === "number"){
+                if (row.competitor_price < 100){
+                    return false;
                 }
+            }
 
-                // Path is given as URL, parsing to only product path
-                if (cn === "Path") {
-                    const urlParts = value.split("/");
-                    const productURLPart = urlParts[urlParts.length - 1];
-                    return productURLPart.split("?")[0];
-                }
+            return true
+        }, {
+            inplace: true
+        })
 
-                return value;
-            },
-            castHeader: (header) => {
-                if (header.includes("SKU")) {
-                    return "SKU";
-                }
+        assertEquals(data.size(), 1449);
+    })
 
-                if (header.includes("Price")) {
-                    return "Price";
-                }
+})
 
-                if (header.includes("LandingPage")) {
-                    return "Path";
-                }
-
-                return header;
-            },
-        }
-    );
-});
-
-await task("Adding our price to competitor CSV", () => {
-    data.addColumn("OurPrice", (row) => {
-        const productRow = products.getRowFromValue("SKU", row.ourCustomSKU);
-
-        row["OurPrice"] = productRow ? productRow.Price : null;
-        return row;
-    });
-});
-
-await task("Adding Price Difference to competitor CSV", () => {
-    data.addColumn("PriceDifference", (row) => {
-        const { OurPrice, competitor_price } = row;
-
-        if (
-            typeof OurPrice === "number" &&
-            typeof competitor_price === "number"
-        ) {
-            row.PriceDifference = OurPrice - competitor_price;
-        } else {
-            row.PriceDifference = null;
-        }
-
-        return row;
-    });
-});
-
-let filtered: CSV = new CSV();
-
-await task("Filtering data by price difference", () => {
-    filtered = data.filter((row) => {
-        if (typeof row.PriceDifference === "number") {
-            return row.PriceDifference > 0 && row.PriceDifference <= 5;
-        }
-
-        return false;
-    });
-});
-
-console.log(filtered.size());

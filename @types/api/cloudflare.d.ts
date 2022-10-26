@@ -1,9 +1,9 @@
-interface CloudflareParams {
+export interface CloudflareParams {
   baseURL: string;
   headers: Record<string, string>;
 }
 
-interface CloudflareLogs {
+export interface CloudflareLogs {
   start: Date,
   end: Date,
   data: Row[]

@@ -2,18 +2,28 @@ import { config } from "https://deno.land/std@0.160.0/dotenv/mod.ts";
 const env = await config();
 import * as path from "https://deno.land/std@0.160.0/path/mod.ts";
 import { Cloudflare } from "./api/cloudflare.ts";
+import type { CloudflareLogs } from "../@types/api/cloudflare.d.ts"
 import { Datetime } from "./helpers/datetime.ts";
 import { CSV } from "./helpers/csv.ts";
 import { task } from "./helpers/cli.ts";
 import "./helpers/string.ts";
 
 
-const __dirname = path.dirname(path.fromFileUrl(import.meta.url));
+/**
+ * Generates absolute path given relative path
+ * @date 2022-10-26 - 4:50:01 a.m.
+ *
+ * @param {string} relativePath
+ * @returns {string}
+ */
+const absolutePath = (relativePath: string) : string => path.resolve(path.dirname(path.fromFileUrl(import.meta.url)), relativePath);
+
+
 
 const competitor = new CSV();
 await task("Read and parse competitor file", async () => {
     await competitor.fromFile(
-        path.resolve(__dirname, "./test-data/10212022.csv"),
+        absolutePath("./test-data/test-data.csv"),
         {
             omitColumns: ["tags"],
             castValue: (val: string, cn: string) : csvValue => {
@@ -35,7 +45,7 @@ const ourProducts = new CSV();
 
 await task("Read and parse our products data", async () => {
     await ourProducts.fromFile(
-        path.resolve(__dirname, "./test-data/product-2022-10-24.csv"),
+        absolutePath("./test-data/test-product-data.csv"),
         {
             castValue: (value: string, cn: string) : csvValue => {
                 if (cn === "Price") {

@@ -1,4 +1,5 @@
 import type { csvValue, Row, ICSV, CSVFromFileOpts, CSVFilterOpts } from "../../@types/index.d.ts"
+import "./string.ts";
 
 /**
  * CSV Object class
@@ -132,7 +133,7 @@ export class CSV implements ICSV {
             );
         }
 
-        const newHeaders = [...this.headers];
+        const newHeaders = [...this.headers, newColumn];
         const newRows: Row[] = [];
         for (let i = 0; i < this.rows.length; i++) {
             const newRow = cb(this.rows[i]);
@@ -142,6 +143,7 @@ export class CSV implements ICSV {
                 );
                 throw error.message;
             }
+            newRows.push(newRow)
         }
 
         return new CSV().create({ headers: newHeaders, rows: newRows });

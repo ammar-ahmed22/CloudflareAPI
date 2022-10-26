@@ -1,14 +1,28 @@
 import { config } from "https://deno.land/std@0.160.0/dotenv/mod.ts";
 const env = await config();
-// import axios from "axios";
-// import type { AxiosInstance, AxiosError } from "axios";
 import { Datetime } from "../helpers/datetime.ts";
+import type { CloudflareParams, CloudflareLogs } from "../../@types/api/cloudflare.d.ts";
 
+/**
+ * Cloudflare API helper
+ * @date 2022-10-26 - 12:01:28 p.m.
+ *
+ * @export
+ * @class Cloudflare
+ * @typedef {Cloudflare}
+ */
 export class Cloudflare {
-    // public axios: AxiosInstance;
+
     public baseURL: string;
     public headers: Record<string, string>;
     public url: URL;
+    /**
+     * Creates an instance of Cloudflare.
+     * @date 2022-10-26 - 12:01:42 p.m.
+     *
+     * @constructor
+     * @param {CloudflareParams} { baseURL, headers }
+     */
     constructor({ baseURL, headers }: CloudflareParams) {
         // this.axios = axios.create({ baseURL, headers });
         this.baseURL = baseURL;
@@ -16,6 +30,14 @@ export class Cloudflare {
         this.url = new URL(this.baseURL);
     }
 
+    /**
+     * Generates new URL with from a URL with provided search params
+     * @date 2022-10-26 - 12:01:51 p.m.
+     *
+     * @param {URL} base - URL to add search params to
+     * @param {Record<string, any>} params - Object with search params to add
+     * @returns {URL}
+     */
     private createURLWithSearchParams = (
         base: URL,
         params: Record<string, any>
@@ -28,6 +50,13 @@ export class Cloudflare {
         return url;
     };
 
+    /**
+     * Generates a new URL from a Cloudflare baseURL with endpoint added 
+     * @date 2022-10-26 - 12:02:38 p.m.
+     *
+     * @param {string} endpoint - Endpoint to add
+     * @returns {URL}
+     */
     private createURLFromEndpoint = (endpoint: string): URL => {
         if (endpoint[0] !== "/") {
             const error = new Error("string endpoint must start with '/'");
@@ -37,7 +66,15 @@ export class Cloudflare {
         return new URL(this.url.pathname + endpoint, this.url.origin);
     };
 
-    public get = async (endpoint: string | URL) => {
+    /**
+     * HTTP get request with provided endpoint from baseURL
+     * @date 2022-10-26 - 12:04:13 p.m.
+     *
+     * @async
+     * @param {(string | URL)} endpoint
+     * @returns {Promise<Response | undefined>}
+     */
+    public get = async (endpoint: string | URL) : Promise<Response | undefined> => {
         if (typeof endpoint === "string" && endpoint[0] !== "/") {
             const error = new Error("string endpoint must start with '/'");
             throw error.message;
@@ -52,15 +89,20 @@ export class Cloudflare {
                 headers: this.headers,
             });
 
-            // const text = await res.text();
-            // console.log({ json });
             return res;
         } catch (error: any) {
             console.error(error.response);
         }
     };
 
-    private parseLogData = (data: string) => {
+    /**
+     * Parses Cloudflare Logs response into array of Row
+     * @date 2022-10-26 - 12:12:14 p.m.
+     *
+     * @param {string} data - Cloudflare logs response converted to text
+     * @returns {Row[]}
+     */
+    private parseLogData = (data: string) : Row[] => {
         const res: Row[] = [];
         data.split("\n")
             .filter((doc) => doc)
@@ -70,6 +112,16 @@ export class Cloudflare {
         return res;
     };
 
+    /**
+     * Gets Cloudflares logs from start to end date (max 7 days)
+     * @date 2022-10-26 - 12:13:02 p.m.
+     *
+     * @async
+     * @param {Date} start - Start date to get logs from 
+     * @param {Date} end - End date to get logs from (must be closer to now than start)
+     * @param {string[]} fields
+     * @returns {Promise<CloudflareLogs>}
+     */
     public logs = async (
         start: Date,
         end: Date,

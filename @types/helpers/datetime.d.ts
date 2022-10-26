@@ -1,4 +1,4 @@
-interface DatetimeParams{
+export interface DatetimeParams{
   year: number,
   month: number,
   day: number,
@@ -7,7 +7,7 @@ interface DatetimeParams{
   second?: number
 }
 
-type Elapsed = {
+export type Elapsed = {
   years?: number,
   days?: number,
   hours?: number,
