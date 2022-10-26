@@ -5,7 +5,6 @@ import { Cloudflare } from "./cloudflare.ts";
 import type { CloudflareLogs } from "../../@types/api/cloudflare.d.ts"
 import { Datetime } from "../helpers/datetime.ts";
 import { CSV } from "../helpers/csv.ts";
-import { task } from "../helpers/cli.ts";
 
 
 Deno.test("Cloudflare", async (t) => {
@@ -22,7 +21,7 @@ Deno.test("Cloudflare", async (t) => {
     const end = Datetime.createDate(new Date(), "past", { minutes: 10 });
     const start = Datetime.createDate(end, "past", { days: 1 });
 
-    let fields = [
+    const fields = [
         "ClientIP",
         "ClientASN",
         "ClientCountry",
@@ -52,6 +51,8 @@ Deno.test("Cloudflare", async (t) => {
 
                 return false;
             })
+
+            console.log(products.size());
         }
     })
 })

@@ -40,6 +40,7 @@ export class Cloudflare {
      */
     private createURLWithSearchParams = (
         base: URL,
+        // deno-lint-ignore no-explicit-any
         params: Record<string, any>
     ): URL => {
         const url = new URL("", base);
@@ -90,8 +91,8 @@ export class Cloudflare {
             });
 
             return res;
-        } catch (error: any) {
-            console.error(error.response);
+        } catch (error: unknown) {
+            console.error(error);
         }
     };
 

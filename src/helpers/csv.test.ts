@@ -1,12 +1,10 @@
 import * as path from "https://deno.land/std@0.160.0/path/mod.ts";
 import { CSV } from "./csv.ts";
-import { task } from "./cli.ts";
 import { assertEquals, assertNotEquals } from "https://deno.land/std@0.160.0/testing/asserts.ts"
 import "../../@types/index.d.ts";
 
 const __dirname = path.dirname(path.fromFileUrl(import.meta.url));
 
-const data = new CSV();
 Deno.test("CSV", async (t) => {
     const data = new CSV();
     
@@ -56,7 +54,7 @@ Deno.test("CSV", async (t) => {
 
     await t.step("Adding column", () => {
         const withTax = data.addColumn("withTax", (row: Row) => {
-            let taxPrice : number = 0;
+            let taxPrice = 0;
             if (typeof row.competitor_price === "number"){
                 taxPrice = parseFloat((row.competitor_price * 1.13).toFixed(2));
             }

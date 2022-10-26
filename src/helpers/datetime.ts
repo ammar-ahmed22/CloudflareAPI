@@ -25,7 +25,7 @@ export class Datetime {
             if (month < 1 || month > 12) {
                 const error = new Error(
                     "month must be greater than 0 and less than 13"
-                );;
+                );
                 throw error.message;
             }
 

@@ -116,7 +116,10 @@ await task("Filtering data by price difference", () => {
 
         return false;
     });
+    console.log(filtered.size());
 });
+
+
 
 const cf = new Cloudflare({
     baseURL: `${env.CF_API_BASE_URL}`,
@@ -131,7 +134,7 @@ const end = Datetime.createDate(new Date(), "past", { minutes: 10 });
 const start = Datetime.createDate(end, "past", { days: 1 });
 
 let logs: CloudflareLogs;
-let fields = [
+const fields = [
     "ClientIP",
     "ClientASN",
     "ClientCountry",
@@ -162,4 +165,7 @@ await task("Create csv from Cloudflare logs and filter by products", () => {
 
         return false;
     });
+    console.log(products.size());
 });
+
+
