@@ -1,0 +1,28 @@
+{
+  "$schema": "https://deno.land/x/denon@2.5.0/schema.json",
+  "scripts": {
+    "start": {
+      "cmd": "deno run ./src/index.ts",
+      "desc": "run my index.ts file",
+      "allow": ["env", "read", "write", "net"]
+    },
+    "test-csv": {
+      "cmd": "deno run ./src/helpers/csv.test.ts",
+      "desc": "Run test file",
+      "allow": ["env", "read", "write"],
+      "unstable": true
+    },
+    "test-url": {
+      "cmd": "deno run ./src/api/url.test.ts",
+      "desc": "Run url test file",
+      "allow": ["env", "read", "write"],
+      "unstable": true
+    },
+    "test-cf" : {
+      "cmd": "deno run ./src/api/cloudflare.test.ts",
+      "desc": "Run cloudflare test file",
+      "allow": ["env", "read", "write", "net"],
+      "unstable": true
+    }
+  }
+}

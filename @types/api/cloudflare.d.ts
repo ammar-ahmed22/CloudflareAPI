@@ -6,5 +6,5 @@ interface CloudflareParams {
 interface CloudflareLogs {
   start: Date,
   end: Date,
-  data: object[]
+  data: Row[]
 }

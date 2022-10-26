@@ -1,41 +1,67 @@
-import dotenv from "dotenv";
-dotenv.config({ path: "./config.env" });
-import axios from "axios";
-import type { AxiosInstance, AxiosError } from "axios";
-import { Datetime } from "../helpers/datetime";
+import { config } from "https://deno.land/std@0.160.0/dotenv/mod.ts";
+const env = await config();
+// import axios from "axios";
+// import type { AxiosInstance, AxiosError } from "axios";
+import { Datetime } from "../helpers/datetime.ts";
 
 export class Cloudflare {
-    public axios: AxiosInstance;
+    // public axios: AxiosInstance;
+    public baseURL: string;
+    public headers: Record<string, string>;
+    public url: URL;
     constructor({ baseURL, headers }: CloudflareParams) {
-        this.axios = axios.create({ baseURL, headers });
+        // this.axios = axios.create({ baseURL, headers });
+        this.baseURL = baseURL;
+        this.headers = headers;
+        this.url = new URL(this.baseURL);
     }
 
-    private addSearchParams = (
-        url: string,
+    private createURLWithSearchParams = (
+        base: URL,
         params: Record<string, any>
-    ): string => {
-        url += "?";
-        Object.keys(params).forEach((param, idx) => {
-            const len = Object.keys(params).length;
-            url += `${param}=${params[param]}`;
-            if (idx !== len - 1) {
-                url += "&";
-            }
+    ): URL => {
+        const url = new URL("", base);
+        Object.keys(params).forEach((key) => {
+            url.searchParams.set(key, `${params[key]}`);
         });
+
         return url;
     };
 
-    public get = async (endpoint: string) => {
+    private createURLFromEndpoint = (endpoint: string): URL => {
+        if (endpoint[0] !== "/") {
+            const error = new Error("string endpoint must start with '/'");
+            throw error.message;
+        }
+
+        return new URL(this.url.pathname + endpoint, this.url.origin);
+    };
+
+    public get = async (endpoint: string | URL) => {
+        if (typeof endpoint === "string" && endpoint[0] !== "/") {
+            const error = new Error("string endpoint must start with '/'");
+            throw error.message;
+        }
         try {
-            const res = await this.axios.get(endpoint);
-            return res.data;
+            const fetchURL: URL =
+                typeof endpoint === "string"
+                    ? this.createURLFromEndpoint(endpoint)
+                    : endpoint;
+            const res = await fetch(fetchURL.href, {
+                method: "GET",
+                headers: this.headers,
+            });
+
+            // const text = await res.text();
+            // console.log({ json });
+            return res;
         } catch (error: any) {
             console.error(error.response);
         }
     };
 
     private parseLogData = (data: string) => {
-        const res: object[] = [];
+        const res: Row[] = [];
         data.split("\n")
             .filter((doc) => doc)
             .forEach((doc: string) => {
@@ -49,23 +75,27 @@ export class Cloudflare {
         end: Date,
         fields: string[]
     ): Promise<CloudflareLogs> => {
-        const baseEndpoint = `zones/${process.env.CF_ZONE_ID}/logs/received`;
+        const baseURL = this.createURLFromEndpoint(
+            `/zones/${env.CF_ZONE_ID}/logs/received`
+        );
 
         const oneHour = 60 * 60;
         const range = Datetime.DateRange(start, end, oneHour);
 
         if (range.length > 2) {
-            console.log("more than an 1h59m");
-            let res: object[] = [];
+            // console.log("more than an 1h59m");
+            let res: Row[] = [];
             for (let i = 0; i < range.length - 1; i++) {
-                const logsEndpoint = this.addSearchParams(baseEndpoint, {
+                const logsURL = this.createURLWithSearchParams(baseURL, {
                     start: Math.floor(range[i].valueOf() / 1000),
                     end: Math.floor(range[i + 1].valueOf() / 1000),
                     fields: fields.join(","),
                     timestamps: "unixnano",
                 });
 
-                const data: string = await this.get(logsEndpoint);
+                const data: string = (await (
+                    await this.get(logsURL)
+                )?.text()) as string;
                 res = res.concat(this.parseLogData(data));
             }
 
@@ -77,14 +107,16 @@ export class Cloudflare {
         } else {
             end = range.length > 1 ? range[1] : end;
             start = range[0];
-            const logsEndpoint = this.addSearchParams(baseEndpoint, {
+            const logsURL = this.createURLWithSearchParams(baseURL, {
                 start: Math.floor(start.valueOf() / 1000),
                 end: Math.floor(end.valueOf() / 1000),
                 fields: fields.join(","),
                 timestamps: "unixnano",
             });
 
-            const data: string = await this.get(logsEndpoint);
+            const data: string = (await (
+                await this.get(logsURL)
+            )?.text()) as string;
 
             return {
                 start,

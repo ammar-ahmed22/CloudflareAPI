@@ -1,40 +1,55 @@
-import dotenv from "dotenv";
-dotenv.config({ path: "./config.env" });
-import { Cloudflare } from "./cloudflare";
-import { Datetime } from "../helpers/datetime";
+import { config } from "https://deno.land/std@0.160.0/dotenv/mod.ts";
+const env = await config();
+
+import { Cloudflare } from "./cloudflare.ts";
+import { Datetime } from "../helpers/datetime.ts";
+import { CSV } from "../helpers/csv.ts";
+import { task } from "../helpers/cli.ts";
 
 const cf = new Cloudflare({
-    baseURL: `${process.env.CF_API_BASE_URL}`,
+    baseURL: `${env.CF_API_BASE_URL}`,
     headers: {
         "Content-Type": "application/json",
-        "X-Auth-Email": `${process.env.CF_AUTH_EMAIL}`,
-        "X-Auth-Key": `${process.env.CF_API_KEY}`,
+        "X-Auth-Email": `${env.CF_AUTH_EMAIL}`,
+        "X-Auth-Key": `${env.CF_API_KEY}`,
     },
 });
 
-jest.setTimeout(30 * 1000);
+const end = Datetime.createDate(new Date(), "past", { minutes: 10 });
+const start = Datetime.createDate(end, "past", { days: 1 });
 
-test("test API is working", async () => {
-    const data = await cf.get(`zones/${process.env.CF_ZONE_ID}`);
+let logs: CloudflareLogs;
+let fields = [
+    "ClientIP",
+    "ClientASN",
+    "ClientCountry",
+    "ClientDeviceType",
+    "ClientIP",
+    "ClientIPClass",
+    "ClientRequestMethod",
+    "ClientRequestPath",
+    "ClientRequestURI",
+    "ClientRequestUserAgent",
+    "EdgePathingSrc",
+    "EdgePathingStatus",
+];
 
-    //console.log(data);
+await task("Get Cloudflare logs from the past day", async () => {
+    logs = await cf.logs(start, end, fields);
 });
 
-test("testing cloudflare api logs function", async () => {
-    const end = Datetime.createDate(new Date(), "past", { minutes: 10 });
-    const start = Datetime.createDate(end, "past", { days: 1 });
+const csv: CSV = new CSV();
+let products: CSV = new CSV();
 
-    const startTime = performance.now();
-    const logs = await cf.logs(start, end, [
-        "ClientIP",
-        "RayID",
-        "EdgeStartTimestamp",
-    ]);
-    const endTime = performance.now();
+await task("Create csv from Cloudflare logs and filter by products", () => {
+    csv.create({ headers: fields, rows: logs.data });
+    products = csv.filter((row) => {
+        if (typeof row.ClientRequestPath === "string") {
+            return row.ClientRequestPath.includes("product");
+        }
 
-    // about 20s
-    console.log({
-        elapsedTime: `${Math.floor((endTime - startTime) / 1000)}s`,
-        size: logs.data.length,
+        return false;
     });
 });
+
+// console.log(products);
