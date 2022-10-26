@@ -8,6 +8,7 @@
     "start": "deno run -c ./denoconfig.json --allow-all  ./src/index.ts",
     "test": "deno test --allow-all",
     "format": "deno fmt -c ./denoconfig.json",
+    "format-push": "yarn format && git add-commit -m \"formatting\" && git push",
     "prebuild": "rm -rf ./execute",
     "build": "deno compile -c ./denoconfig.json --allow-all --output=execute ./src/index.ts"
   }
