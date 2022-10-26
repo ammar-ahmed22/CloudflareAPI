@@ -18,7 +18,7 @@
       "allow": ["env", "read", "write"],
       "unstable": true
     },
-    "test-cf" : {
+    "test-cf": {
       "cmd": "deno run ./src/api/cloudflare.test.ts",
       "desc": "Run cloudflare test file",
       "allow": ["env", "read", "write", "net"],

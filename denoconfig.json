@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "types": [
+      "./@types/index.d.ts"
+    ],
+    "noImplicitAny": false
+  },
+  "fmt": {
+    "options": {
+      "useTabs": false,
+      "singleQuote": false,
+      "lineWidth": 80,
+      "indentWidth": 2
+    }
+  }
+}

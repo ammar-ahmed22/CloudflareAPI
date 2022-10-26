@@ -4,7 +4,7 @@ export interface CloudflareParams {
 }
 
 export interface CloudflareLogs {
-  start: Date,
-  end: Date,
-  data: Row[]
+  start: Date;
+  end: Date;
+  data: Row[];
 }
