@@ -1,10 +1,10 @@
 import { config } from "https://deno.land/std@0.160.0/dotenv/mod.ts";
 const env = await config();
 
-import { Cloudflare } from "./cloudflare.ts";
+import { Cloudflare } from "../../src/api/cloudflare.ts";
 import type { CloudflareLogs } from "../../@types/api/cloudflare.d.ts";
-import { Datetime } from "../helpers/datetime.ts";
-import { CSV } from "../helpers/csv.ts";
+import { Datetime } from "../../src/helpers/datetime.ts";
+import { CSV } from "../../src/helpers/csv.ts";
 
 Deno.test("Cloudflare", async (t) => {
   const cf = new Cloudflare({
