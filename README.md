@@ -11,11 +11,10 @@ TypeScript.
 - [Deno.js](https://deno.land/) (similar to Node.js, made by the same person)
   - Runtime environment
   - Reading and writing files
+  - Formatting
   - Testing
 - [Cloudflare API](https://test.com)
   - Pulling request data
-- [Prettier](https://test.com)
-  - Formatting
 - [Yarn](https://test.com)
   - Simplifying Deno commands
 

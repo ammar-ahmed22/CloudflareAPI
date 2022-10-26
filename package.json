@@ -4,12 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "denon start",
+    "dev": "denon",
     "start": "deno run -c ./denoconfig.json --allow-all  ./src/index.ts",
     "test": "deno test --allow-all",
     "format": "deno fmt -c ./denoconfig.json",
     "prebuild": "rm -rf ./execute",
-    "build": "deno compile -c ./denoconfig.json --allow-all --output=execute ./src/index.ts",
-    "deno-test-csv": "deno run --allow-env --allow-read --allow-write --unstable ./src/helpers/csv.test.ts"
+    "build": "deno compile -c ./denoconfig.json --allow-all --output=execute ./src/index.ts"
   }
 }

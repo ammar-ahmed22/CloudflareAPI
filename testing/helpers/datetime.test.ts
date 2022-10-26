@@ -1,4 +1,4 @@
-import { Datetime } from "./datetime.ts";
+import { Datetime } from "../../src/helpers/datetime.ts";
 import { assertEquals } from "https://deno.land/std@0.160.0/testing/asserts.ts";
 
 Deno.test("Datetime helper", async (t) => {

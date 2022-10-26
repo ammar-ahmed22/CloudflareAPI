@@ -1,5 +1,5 @@
 import * as path from "https://deno.land/std@0.160.0/path/mod.ts";
-import { CSV } from "./csv.ts";
+import { CSV } from "../../src/helpers/csv.ts";
 import {
   assertEquals,
   assertNotEquals,
