@@ -7,6 +7,7 @@ import { CSV } from "./helpers/csv.ts";
 import { task } from "./helpers/cli.ts";
 import "./helpers/string.ts";
 
+
 const __dirname = path.dirname(path.fromFileUrl(import.meta.url));
 
 const competitor = new CSV();
@@ -15,7 +16,7 @@ await task("Read and parse competitor file", async () => {
         path.resolve(__dirname, "./test-data/10212022.csv"),
         {
             omitColumns: ["tags"],
-            castValue: (val, cn) => {
+            castValue: (val: string, cn: string) : csvValue => {
                 if (cn === "competitor_price") {
                     return parseFloat(val);
                 }
@@ -36,7 +37,7 @@ await task("Read and parse our products data", async () => {
     await ourProducts.fromFile(
         path.resolve(__dirname, "./test-data/product-2022-10-24.csv"),
         {
-            castValue: (value, cn) => {
+            castValue: (value: string, cn: string) : csvValue => {
                 if (cn === "Price") {
                     return parseFloat(value);
                 }
@@ -50,7 +51,7 @@ await task("Read and parse our products data", async () => {
 
                 return value;
             },
-            castHeader: (header) => {
+            castHeader: (header: string) : string => {
                 if (header.includes("SKU")) {
                     return "SKU";
                 }
