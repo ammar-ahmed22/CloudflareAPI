@@ -1,19 +1,19 @@
-type csvValue = boolean | string | number | Date | null;
+export type csvValue = boolean | string | number | Date | null;
 
-type Row = Record<string, csvValue>;
+export type Row = Record<string, csvValue>;
 
-interface CSVFromFileOpts {
+export interface CSVFromFileOpts {
   omitColumns?: string[];
   delimiter?: string;
   castValue?: (value: string, columnName: string) => csvValue;
   castHeader?: (header: string) => string;
 }
 
-interface CSVFilterOpts {
+export interface CSVInplaceOpts {
   inplace?: boolean;
 }
 
-interface ICSV {
+export interface ICSV {
   rows: Row[] | undefined;
   headers: string[] | undefined;
 }

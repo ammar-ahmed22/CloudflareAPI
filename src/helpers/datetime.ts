@@ -163,4 +163,21 @@ export class Datetime {
 
     return res.filter((date) => this.difference(date, end) >= 0);
   };
+
+  /**
+   * Checks if a date is in between 2 dates
+   * @date 2022-10-28 - 5:21:57 a.m.
+   *
+   * @param {Date} date - Date to check
+   * @param {Date} after - Date that the "date" must be after
+   * @param {Date} before - Date that the "date" must be before or on
+   * @returns {boolean}
+   */
+  static isInBetween = (date: Date, after: Date, before: Date) : boolean => {
+    if (date > after && date <= before){
+      return true;
+    }
+
+    return false;
+  }
 }

@@ -2,9 +2,14 @@
   "$schema": "https://deno.land/x/denon@2.5.0/schema.json",
   "scripts": {
     "start": {
-      "cmd": "deno run ./src/index.ts",
+      "cmd": "deno run ./index.ts",
       "desc": "run my index.ts file",
       "allow": ["env", "read", "write", "net"]
+    },
+    "test-cli": {
+      "cmd": "deno run ./testing/helpers/cli.test.ts",
+      "desc": "run cli test file",
+      "allow": ["all"]
     }
   }
 }

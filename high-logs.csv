@@ -1,0 +1,26 @@
+SKU,CompetitorPrice,UpdateTime,PriceDrop,OurPriceDrop,Path,LogCount,UniqueIPCount,HighestRequestsIP,HighestRequestsIPCount,MultipleProducts?
+LATAMBAOM-100B,34.95,Wed Oct 26 2022 01:55:00 GMT-0400 (Eastern Daylight Saving Time),3,2.75,lattafabadeealoudamethyst-man,2090,665,2603:8000:c840:ca00:6837:5db5:a5c9:d7e6,18,false
+VERDYBLM-50B,45,Mon Jun 13 2022 11:18:00 GMT-0400 (Eastern Daylight Saving Time),14.950000000000003,14.950000000000003,versacedylanblue-man,2977,756,66.249.66.25,22,false
+MONBEPLM-60B,37,Tue Sep 13 2022 21:01:00 GMT-0400 (Eastern Daylight Saving Time),12.149999999999999,15.950000000000003,montblancexplorer-man,2485,659,66.249.66.15,48,true
+LATIMWRM-60B,23.45,Wed Oct 26 2022 01:50:00 GMT-0400 (Eastern Daylight Saving Time),3.5,1.5500000000000007,lattafaiamwhiterouge-man,3969,1175,143.59.37.186,32,true
+FRAOOVW-100B,19,Wed Jun 01 2022 06:50:00 GMT-0400 (Eastern Daylight Saving Time),6.25,6,franckolivieroudvanille-man,1599,568,70.79.141.26,18,false
+PARMARLHERODM-75B,146,Wed Oct 19 2022 02:41:00 GMT-0400 (Eastern Daylight Saving Time),48.44999999999999,34.94999999999999,herodmarly-man,2070,537,165.225.62.46,28,false
+XER40KNOTSM-100B,179,Fri Oct 21 2022 17:12:00 GMT-0400 (Eastern Daylight Saving Time),58.94999999999999,60.94999999999999,xerjoff40knots-man,1206,385,137.25.177.230,24,false
+LATASDM-100B,29.95,Wed Oct 26 2022 02:10:00 GMT-0400 (Eastern Daylight Saving Time),1,3.0000000000000036,lattafaasad-man,8977,2259,76.125.38.138,46,false
+LATEJM-100B,17,Wed Oct 26 2022 01:55:00 GMT-0400 (Eastern Daylight Saving Time),4.949999999999999,9.95,lattafaejaazi-man,2248,642,216.115.251.241,32,false
+CREAVM-50B,256,Sun Oct 23 2022 20:17:00 GMT-0400 (Eastern Daylight Saving Time),85.44999999999999,87.94999999999999,creedaventus-man,1558,421,2605:8d80:609:bbdf:126:1c57:bd2a:bf4c,19,false
+ADIVLM-100B,6,Sat Oct 22 2022 10:12:00 GMT-0400 (Eastern Daylight Saving Time),0.8499999999999996,0.9500000000000002,adidas-man,1764,586,2001:569:7660:9000:ecf8:de32:c5d2:63a4,58,false
+PARMARLAYTM-75B,148,Wed Oct 19 2022 02:41:00 GMT-0400 (Eastern Daylight Saving Time),49.44999999999999,51,parfumsdemarlylayton-man,5829,1425,76.69.80.240,96,false
+ROJDEPPCHM-100B,223,Tue Aug 09 2022 13:43:00 GMT-0400 (Eastern Daylight Saving Time),73.94999999999999,106.94999999999999,rojaelysiumparfumhommecologne-man,1109,302,74.137.75.96,34,false
+LATQDALFM-90B,24.95,Wed Oct 26 2022 02:25:00 GMT-0400 (Eastern Daylight Saving Time),1.6400000000000006,1.6000000000000014,lattafaqaedalfursan-man,2435,739,66.65.189.238,26,false
+LATAFAM-100B,18,Tue Oct 25 2022 17:41:00 GMT-0400 (Eastern Daylight Saving Time),5.449999999999999,6.789999999999999,lattafafakhar-man,4444,1181,143.59.37.186,50,true
+INIOUGREEDPM-90B,234,Mon Oct 24 2022 20:56:00 GMT-0400 (Eastern Daylight Saving Time),78.44999999999999,81,initiooudforgreatness-man,1072,324,184.70.123.26,26,false
+CARHECHW-50B,45,Fri Feb 19 2021 17:47:00 GMT-0500 (Eastern Standard Time),13.950000000000003,28.950000000000003,ch-woman,1116,282,105.163.55.162,32,false
+LATQAM-100B,21.25,Wed Oct 26 2022 02:25:00 GMT-0400 (Eastern Daylight Saving Time),2.3999999999999986,3.75,lattafaqaaed-man,2243,658,186.22.54.170,20,false
+NARRW-50B,45,Sun Oct 31 2021 21:17:00 GMT-0400 (Eastern Daylight Saving Time),13.950000000000003,30,narciscorodriguez-woman,1186,327,184.171.212.29,18,true
+LATIAWM-60B,17.75,Wed Oct 26 2022 01:50:00 GMT-0400 (Eastern Daylight Saving Time),1,0.6999999999999993,lattafaiamwhite-man,1339,424,157.55.39.39,28,false
+SPIBM-100B,82,Sat Oct 22 2022 21:49:00 GMT-0400 (Eastern Daylight Saving Time),26.650000000000006,27.650000000000006,victorandrolfspicebomb-man,1195,356,142.160.90.7,29,false
+NAUVM-100B,19,Mon Oct 24 2022 11:57:00 GMT-0400 (Eastern Daylight Saving Time),5.149999999999999,5.149999999999999,nauticavoyage-man,1664,496,66.249.66.15,20,true
+NARREW-100B,81,Tue Aug 30 2022 15:09:00 GMT-0400 (Eastern Daylight Saving Time),26.950000000000003,38,narciscorodriguez-woman,1186,327,184.171.212.29,18,true
+VERDM-100B,37,Fri Oct 07 2022 00:23:00 GMT-0400 (Eastern Daylight Saving Time),11.75,7.189999999999998,versacedreamer-man,1143,444,66.249.66.15,20,true
+ARMCLINM-105S,50,Fri Oct 21 2022 12:48:00 GMT-0400 (Eastern Daylight Saving Time),15.950000000000003,13.950000000000003,armafclubnuitintense-man,3938,1048,76.69.165.200,54,false

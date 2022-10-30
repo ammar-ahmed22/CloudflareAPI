@@ -1,10 +1,10 @@
 import type {
-  CSVFilterOpts,
+  CSVInplaceOpts,
   CSVFromFileOpts,
   csvValue,
   ICSV,
   Row,
-} from "../../@types/index.d.ts";
+} from "../../@types/helpers/csv.d.ts";
 import "./string.ts";
 
 /**
@@ -101,7 +101,7 @@ export class CSV implements ICSV {
    *
    * @param {string} colName - Name of the column to check
    * @param {csvValue} value - Value of the column at the row needed
-   * @returns {(Row | null)}
+   * @returns {Row | null}
    */
   public getRowFromValue = (
     colName: string,
@@ -129,17 +129,46 @@ export class CSV implements ICSV {
     return null;
   };
 
+
   /**
-   * Adds a column to all rows using a callback and creates a new CSV
+   * Gets array of row objects using first match from callback function
+   * @date 2022-10-28 - 2:16:44 p.m.
+   *
+   * @param {(row: Row) => boolean} matchFn - Callback function to match row you want
+   * @returns {(Row | null)}
+   */
+  public getRowsFromMatch = (matchFn: (row: Row) => boolean) : Row[] => {
+    if (!this.headers || !this.rows) {
+      throw new Error(
+        "the init() or create() methods must be called prior to using this method.",
+      );
+    }
+
+    const result : Row[] = []
+
+    for (let i = 0; i < this.rows.length; i++){
+      const row = this.rows[i];
+      if (matchFn(row)){
+        result.push(row);
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Adds a column to all rows using a callback and creates a new CSV (can be called in place as well)
    * @date 2022-10-26 - 4:37:34 a.m.
    *
    * @param {string} newColumn - Name of the column to add
    * @param {(row: Row) => Row} cb - Callback function in which each new column must be added to each row
+   * @param {?CSVInplaceOpts} opts - Options to specify whether or not to mutate original
    * @returns {CSV}
    */
-  public addColumn = (
-    newColumn: string,
+  public addColumns = (
+    newColumns: string | string[],
     cb: (row: Row) => Row,
+    opts?: CSVInplaceOpts
   ): CSV => {
     if (!this.headers || !this.rows) {
       throw new Error(
@@ -147,23 +176,31 @@ export class CSV implements ICSV {
       );
     }
 
-    const newHeaders = [...this.headers, newColumn];
+    const newHeaders = this.headers.concat(newColumns);
     const newRows: Row[] = [];
     for (let i = 0; i < this.rows.length; i++) {
       const newRow = cb(this.rows[i]);
-      if (!Object.keys(newRow).includes(newColumn)) {
-        const error = new Error(
-          `callback must return row with new column: "${newColumn}" added.`,
-        );
-        throw error.message;
+      if (Array.isArray(newColumns)){
+        newColumns.forEach( col => {
+          if (!Object.keys(newRow).includes(col)){
+            throw `callback must return row with new column: ${col} added.`
+          }
+        })
+      } else {
+        if (!Object.keys(newRow).includes(newColumns)) {
+          throw `callback must return row with new column: "${newColumns}" added.`
+        }
       }
+      
       newRows.push(newRow);
     }
 
-    return new CSV().create({
-      headers: newHeaders,
-      rows: newRows,
-    });
+    if (opts?.inplace){
+      this.headers = newHeaders,
+      this.rows = newRows;
+    }
+
+    return opts?.inplace ? this : new CSV().create({ headers: newHeaders, rows: newRows })
   };
 
   /**
@@ -176,7 +213,7 @@ export class CSV implements ICSV {
    */
   public filter = (
     cb: (row: Row) => boolean,
-    opts?: CSVFilterOpts,
+    opts?: CSVInplaceOpts,
   ): CSV => {
     if (!this.headers || !this.rows) {
       throw new Error(

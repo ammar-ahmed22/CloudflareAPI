@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "denon",
-    "start": "deno run -c ./denoconfig.json --allow-all  ./src/index.ts",
+    "start": "deno run -c ./denoconfig.json --v8-flags=--max-old-space-size=8192  --allow-all --unstable  ./index.ts",
     "test": "deno test --allow-all",
     "format": "deno fmt -c ./denoconfig.json",
     "format-push": "yarn format && git add-commit -m \"formatting\" && git push",
